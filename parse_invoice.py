@@ -3,6 +3,7 @@ from google.cloud import vision
 import os
 import json
 
+
 # Konfiguracja xAI API
 client = OpenAI(
     api_key=os.environ.get('XAI_API_KEY'),
