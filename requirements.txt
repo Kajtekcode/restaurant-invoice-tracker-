@@ -1,0 +1,10 @@
+twilio
+google-cloud-vision
+gspread
+oauth2client
+openai
+requests
+python-dotenv
+flask
+gunicorn
+flask-limiter
