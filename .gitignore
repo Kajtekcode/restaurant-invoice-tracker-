@@ -2,3 +2,5 @@ venv/
 *.jpg
 credentials.json
 .env
+.venv
+app.log
