@@ -5,7 +5,15 @@ from src.config import XAI_API_KEY
 
 logger = logging.getLogger(__name__)
 
-client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
+def parse_grok_response(raw_response):
+    """Turn a Grok response string into JSON. No network."""
+    if raw_response is None or raw_response == "":
+        return None
+    try:
+        return json.loads(raw_response)
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON from Grok: {e}")
+        return None
 
 def parse_invoice_text(text, paid_status):
     """Parse OCR-extracted text into structured JSON using Grok-3."""
@@ -111,6 +119,7 @@ def parse_invoice_text(text, paid_status):
     ```
     """
     try:
+        client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
         response = client.chat.completions.create(
             model="grok-3-beta",
             messages=[{"role": "user", "content": prompt}],
@@ -119,12 +128,10 @@ def parse_invoice_text(text, paid_status):
         )
         raw_response = response.choices[0].message.content
         logger.debug(f"Raw Grok response: {raw_response}")
-        parsed_data = json.loads(raw_response)
-        logger.info("Successfully parsed invoice data")
+        parsed_data = parse_grok_response(raw_response)
+        if parsed_data is not None:
+            logger.info("Successfully parsed invoice data")
         return parsed_data
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON from Grok: {e}")
-        return None
     except Exception as e:
         logger.error(f"Failed to parse invoice: {e}")
         return None
