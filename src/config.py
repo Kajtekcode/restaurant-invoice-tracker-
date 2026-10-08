@@ -13,8 +13,8 @@ NOTIFICATION_WHATSAPP_NUMBER = os.getenv("NOTIFICATION_WHATSAPP_NUMBER")
 XAI_API_KEY = os.getenv("XAI_API_KEY")
 
 # Google Sheets
-SPREADSHEET_ID = "GrLufeQeZMwP9vd3OYA2zhzh50FOiNFePWtP0PbCCXk"
-CREDENTIALS_PATH = "credentials.json"
+SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
+
 
 # Local storage
 INVOICES_DIR = "invoices"
