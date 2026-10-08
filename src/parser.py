@@ -16,7 +16,7 @@ def parse_grok_response(raw_response):
         return None
 
 def parse_invoice_text(text, paid_status):
-    """Parse OCR-extracted text into structured JSON using Grok-3."""
+    """Parse OCR-extracted text into structured JSON using Grok."""
     prompt = f"""
     You are an expert at extracting data from Polish invoices. Parse the provided invoice text into a JSON object with the exact structure below. The invoice is in Polish, prices are in PLN, and formats may vary.
 
@@ -121,7 +121,7 @@ def parse_invoice_text(text, paid_status):
     try:
         client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
         response = client.chat.completions.create(
-            model="grok-3-beta",
+            model="grok-4.7",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=2000,
             temperature=0.2
