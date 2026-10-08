@@ -6,11 +6,17 @@ from src.config import XAI_API_KEY
 logger = logging.getLogger(__name__)
 
 def parse_grok_response(raw_response):
-    """Turn a Grok response string into JSON. No network."""
-    if raw_response is None or raw_response == "":
+    """Turn the raw model text into a dict. No network."""
+    if not raw_response:
         return None
+    text = raw_response.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[-1]
+        if text.endswith("```"):
+            text = text[: text.rfind("```")]
+        text = text.strip()
     try:
-        return json.loads(raw_response)
+        return json.loads(text)
     except json.JSONDecodeError as e:
         logger.error(f"Invalid JSON from Grok: {e}")
         return None
@@ -123,7 +129,7 @@ def parse_invoice_text(text, paid_status):
         response = client.chat.completions.create(
             model="grok-4.7",
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=2000,
+            max_tokens=8000,
             temperature=0.2
         )
         raw_response = response.choices[0].message.content

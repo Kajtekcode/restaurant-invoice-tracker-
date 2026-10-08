@@ -14,3 +14,9 @@ def test_valid_json_returns_dict_with_seller_and_ingredients():
 
 def test_garbage_string_returns_none():
     assert parse_grok_response("not json at all") is None
+
+def test_parse_fenced_json():
+    raw = '```json\n{"seller": "ABC", "ingredients": [{"name": "maka"}]}\n```'
+    data = parse_grok_response(raw)
+    assert data["seller"] == "ABC"
+    assert data["ingredients"][0]["name"] == "maka"
