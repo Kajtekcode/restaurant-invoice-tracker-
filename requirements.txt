@@ -9,3 +9,4 @@ flask
 gunicorn
 flask-limiter
 pytest
+tenacity
