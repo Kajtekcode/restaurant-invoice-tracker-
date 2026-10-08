@@ -14,7 +14,7 @@ XAI_API_KEY = os.getenv("XAI_API_KEY")
 
 # Google Sheets
 SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
-
+CREDENTIALS_PATH = "credentials.json"
 
 # Local storage
 INVOICES_DIR = "invoices"
