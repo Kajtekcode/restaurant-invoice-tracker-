@@ -9,6 +9,24 @@ logger = logging.getLogger(__name__)
 
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
+HEADERS = {
+    "Faktury Niezapłacone": ["Data Wystawienia", "Numer Faktury", "Sprzedawca", "Kwota Całkowita (PLN)", "Kategoria", "Termin Płatności", "Opłacona (T/N)", "Dni do Zapłaty"],
+    "Faktury Zapłacone": ["Data Wystawienia", "Numer Faktury", "Sprzedawca", "Kwota Całkowita (PLN)", "Kategoria", "Termin Płatności", "Opłacona (T/N)", "Dni do Zapłaty"],
+    "JEDZENIE": ["Data", "Składnik", "JM", "Cena netto (za JM)", "VAT", "Cena brutto (za JM)", "Sprzedawca"],
+    "NAPOJE": ["Data", "Składnik", "JM", "Cena netto (za JM)", "VAT", "Cena brutto (za JM)", "Sprzedawca"],
+    "NAPOJE ALKOHOLOWE": ["Data", "Składnik", "JM", "Cena netto (za JM)", "VAT", "Cena brutto (za JM)", "Sprzedawca"],
+    "CHEMIA": ["Data", "Składnik", "JM", "Cena netto (za JM)", "VAT", "Cena brutto (za JM)", "Sprzedawca"],
+    "INNE": ["Data", "Składnik", "JM", "Cena netto (za JM)", "VAT", "Cena brutto (za JM)", "Sprzedawca"],
+}
+
+def ensure_worksheets(spreadsheet):
+    existing = {ws.title for ws in spreadsheet.worksheets()}
+    for title, header in HEADERS.items():
+        if title not in existing:
+            worksheet = spreadsheet.add_worksheet(title=title, rows=100, cols=len(header))
+            worksheet.append_row(header)
+            logger.info(f"Created worksheet {title}")
+
 def get_spreadsheet():
     """Connect to Google Sheets."""
     try:
@@ -16,6 +34,7 @@ def get_spreadsheet():
         client = gspread.authorize(creds)
         spreadsheet = client.open_by_key(SPREADSHEET_ID)
         logger.info("Connected to Google Sheets")
+        ensure_worksheets(spreadsheet)
         return spreadsheet
     except Exception as e:
         logger.error(f"Failed to connect to Google Sheets: {e}")
